@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Menu, X, Globe } from 'lucide-react';
+import { Menu, X, Globe, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Button } from '@/components/ui/button';
 
 export function Navbar() {
   const { language, t, toggleLanguage } = useLanguage();
@@ -16,75 +17,83 @@ export function Navbar() {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-neu-yellow border-b-3 border-neu-black">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           <button
             onClick={() => scrollToSection('hero')}
-            className="font-display text-2xl md:text-3xl font-bold text-neu-black tracking-tight"
+            className="font-display text-2xl md:text-3xl font-bold text-foreground tracking-tight flex items-center gap-2"
             data-testid="link-logo"
           >
-            {t.nav.logo}
+            <span className="text-primary">{t.nav.logo}</span>
           </button>
 
-          <div className="hidden md:flex items-center gap-6">
-            <button
+          <div className="hidden md:flex items-center gap-1">
+            <Button
+              variant="ghost"
               onClick={() => scrollToSection('services')}
-              className="font-sans font-semibold text-neu-black uppercase tracking-wide text-sm transition-all duration-200 border-b-2 border-transparent hover:border-neu-black"
+              className="text-muted-foreground hover:text-foreground"
               data-testid="link-services"
             >
               {t.nav.services}
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="ghost"
               onClick={() => scrollToSection('portfolio')}
-              className="font-sans font-semibold text-neu-black uppercase tracking-wide text-sm transition-all duration-200 border-b-2 border-transparent hover:border-neu-black"
+              className="text-muted-foreground hover:text-foreground"
               data-testid="link-portfolio"
             >
               {t.nav.portfolio}
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="ghost"
               onClick={() => scrollToSection('order')}
-              className="font-sans font-semibold text-neu-black uppercase tracking-wide text-sm transition-all duration-200 border-b-2 border-transparent hover:border-neu-black"
+              className="text-muted-foreground hover:text-foreground"
               data-testid="link-contact"
             >
               {t.nav.contact}
-            </button>
+            </Button>
 
-            <button
+            <div className="w-px h-6 bg-border mx-2" />
+
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={toggleLanguage}
-              className="flex items-center gap-2 px-4 py-2 bg-neu-white border-3 border-neu-black shadow-brutal-sm font-sans font-bold uppercase text-sm transition-all duration-200 hover:shadow-brutal-hover hover:translate-x-[2px] hover:translate-y-[2px] active:shadow-brutal-active active:translate-x-[4px] active:translate-y-[4px]"
+              className="text-muted-foreground hover:text-foreground"
               data-testid="button-language-toggle"
             >
               <Globe className="w-4 h-4" />
-              {language}
-            </button>
+            </Button>
 
-            <button
+            <Button
               onClick={() => scrollToSection('order')}
-              className="px-6 py-2 bg-neu-pink border-3 border-neu-black shadow-brutal-sm font-sans font-bold uppercase text-sm text-neu-black transition-all duration-200 hover:shadow-brutal-hover hover:translate-x-[2px] hover:translate-y-[2px] active:shadow-brutal-active active:translate-x-[4px] active:translate-y-[4px]"
+              className="ml-2 glow-primary"
               data-testid="button-order-nav"
             >
+              <Sparkles className="w-4 h-4 mr-2" />
               {t.nav.order}
-            </button>
+            </Button>
           </div>
 
-          <div className="flex md:hidden items-center gap-3">
-            <button
+          <div className="flex md:hidden items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={toggleLanguage}
-              className="flex items-center gap-1 px-3 py-2 bg-neu-white border-3 border-neu-black shadow-brutal-sm font-sans font-bold uppercase text-xs"
               data-testid="button-language-toggle-mobile"
             >
-              <Globe className="w-3 h-3" />
-              {language}
-            </button>
+              <Globe className="w-4 h-4" />
+            </Button>
 
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 bg-neu-white border-3 border-neu-black shadow-brutal-sm"
               data-testid="button-mobile-menu"
             >
               {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -95,30 +104,33 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-neu-yellow border-t-3 border-neu-black"
+            className="md:hidden bg-background/95 backdrop-blur-xl border-t border-border/50"
           >
-            <div className="px-4 py-4 flex flex-col gap-3">
-              <button
+            <div className="px-4 py-4 flex flex-col gap-2">
+              <Button
+                variant="ghost"
                 onClick={() => scrollToSection('services')}
-                className="w-full py-3 bg-neu-white border-3 border-neu-black shadow-brutal-sm font-sans font-bold uppercase text-sm text-center"
+                className="w-full justify-start"
                 data-testid="link-services-mobile"
               >
                 {t.nav.services}
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="ghost"
                 onClick={() => scrollToSection('portfolio')}
-                className="w-full py-3 bg-neu-white border-3 border-neu-black shadow-brutal-sm font-sans font-bold uppercase text-sm text-center"
+                className="w-full justify-start"
                 data-testid="link-portfolio-mobile"
               >
                 {t.nav.portfolio}
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => scrollToSection('order')}
-                className="w-full py-3 bg-neu-pink border-3 border-neu-black shadow-brutal-sm font-sans font-bold uppercase text-sm text-center"
+                className="w-full mt-2"
                 data-testid="button-order-mobile"
               >
+                <Sparkles className="w-4 h-4 mr-2" />
                 {t.nav.order}
-              </button>
+              </Button>
             </div>
           </motion.div>
         )}

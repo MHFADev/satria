@@ -1,6 +1,7 @@
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Palette, FileText, Image, Layout, PenTool, FileSpreadsheet, BookOpen, AlertCircle } from 'lucide-react';
+import { Palette, FileText, Image, Layout, PenTool, FileSpreadsheet, BookOpen, AlertCircle, Zap, Users, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Card, CardContent } from '@/components/ui/card';
 
 const graphicIcons = [
   { icon: Image, label: 'Flyer' },
@@ -34,8 +35,13 @@ export function Services() {
   };
 
   return (
-    <section id="services" className="py-20 md:py-28 bg-neu-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="services" className="py-20 md:py-28 bg-background relative">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -43,10 +49,10 @@ export function Services() {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-neu-black mb-4">
-            {t.services.sectionTitle}
+          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4">
+            <span className="gradient-text">{t.services.sectionTitle}</span>
           </h2>
-          <p className="font-sans text-lg md:text-xl text-neu-black/70 max-w-2xl mx-auto">
+          <p className="font-sans text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
             {t.services.sectionSubtitle}
           </p>
         </motion.div>
@@ -58,77 +64,81 @@ export function Services() {
           viewport={{ once: true }}
           className="grid grid-cols-1 lg:grid-cols-2 gap-8"
         >
-          <motion.div
-            variants={itemVariants}
-            className="bg-neu-yellow border-3 border-neu-black shadow-brutal-lg p-8 md:p-10 transition-all duration-200 hover:shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px]"
-          >
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 bg-neu-white border-3 border-neu-black shadow-brutal-sm flex items-center justify-center">
-                <Palette className="w-8 h-8 text-neu-black" />
-              </div>
-              <h3 className="font-display text-2xl md:text-3xl font-bold text-neu-black">
-                {t.services.graphicDesign.title}
-              </h3>
-            </div>
-
-            <p className="font-sans text-neu-black/80 mb-6 text-lg">
-              {t.services.graphicDesign.description}
-            </p>
-
-            <div className="grid grid-cols-2 gap-4">
-              {t.services.graphicDesign.items.map((item, index) => {
-                const IconComponent = graphicIcons[index]?.icon || Image;
-                return (
-                  <div
-                    key={index}
-                    className="flex items-center gap-3 p-4 bg-neu-white border-3 border-neu-black shadow-brutal-sm"
-                  >
-                    <IconComponent className="w-5 h-5 text-neu-black flex-shrink-0" />
-                    <span className="font-sans font-semibold text-sm text-neu-black">{item}</span>
+          <motion.div variants={itemVariants}>
+            <Card className="h-full bg-gradient-to-br from-card to-card/50 border-border/50 backdrop-blur-xl overflow-hidden group hover:border-primary/30 transition-colors duration-300">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <CardContent className="p-8 md:p-10 relative">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/30 rounded-2xl flex items-center justify-center">
+                    <Palette className="w-8 h-8 text-primary" />
                   </div>
-                );
-              })}
-            </div>
+                  <h3 className="font-display text-2xl md:text-3xl font-bold text-foreground">
+                    {t.services.graphicDesign.title}
+                  </h3>
+                </div>
+
+                <p className="font-sans text-muted-foreground mb-6 text-lg">
+                  {t.services.graphicDesign.description}
+                </p>
+
+                <div className="grid grid-cols-2 gap-3">
+                  {t.services.graphicDesign.items.map((item, index) => {
+                    const IconComponent = graphicIcons[index]?.icon || Image;
+                    return (
+                      <div
+                        key={index}
+                        className="flex items-center gap-3 p-4 bg-muted/30 border border-border/50 rounded-xl hover:bg-muted/50 transition-colors"
+                      >
+                        <IconComponent className="w-5 h-5 text-primary flex-shrink-0" />
+                        <span className="font-sans font-medium text-sm text-foreground">{item}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
           </motion.div>
 
-          <motion.div
-            variants={itemVariants}
-            className="bg-neu-pink border-3 border-neu-black shadow-brutal-lg p-8 md:p-10 transition-all duration-200 hover:shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px]"
-          >
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 bg-neu-white border-3 border-neu-black shadow-brutal-sm flex items-center justify-center">
-                <FileText className="w-8 h-8 text-neu-black" />
-              </div>
-              <h3 className="font-display text-2xl md:text-3xl font-bold text-neu-black">
-                {t.services.academicHelp.title}
-              </h3>
-            </div>
-
-            <p className="font-sans text-neu-black/80 mb-6 text-lg">
-              {t.services.academicHelp.description}
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-              {t.services.academicHelp.items.map((item, index) => {
-                const IconComponent = academicIcons[index]?.icon || FileText;
-                return (
-                  <div
-                    key={index}
-                    className="flex items-center gap-3 p-4 bg-neu-white border-3 border-neu-black shadow-brutal-sm"
-                  >
-                    <IconComponent className="w-5 h-5 text-neu-black flex-shrink-0" />
-                    <span className="font-sans font-semibold text-sm text-neu-black">{item}</span>
+          <motion.div variants={itemVariants}>
+            <Card className="h-full bg-gradient-to-br from-card to-card/50 border-border/50 backdrop-blur-xl overflow-hidden group hover:border-accent/30 transition-colors duration-300">
+              <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <CardContent className="p-8 md:p-10 relative">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-accent/20 to-accent/5 border border-accent/30 rounded-2xl flex items-center justify-center">
+                    <FileText className="w-8 h-8 text-accent" />
                   </div>
-                );
-              })}
-            </div>
+                  <h3 className="font-display text-2xl md:text-3xl font-bold text-foreground">
+                    {t.services.academicHelp.title}
+                  </h3>
+                </div>
 
-            <div className="flex items-start gap-3 p-4 bg-neu-white/50 border-3 border-neu-black">
-              <AlertCircle className="w-5 h-5 text-neu-black flex-shrink-0 mt-0.5" />
-              <p className="font-sans text-sm text-neu-black font-medium">
-                {t.services.academicHelp.note}
-              </p>
-            </div>
+                <p className="font-sans text-muted-foreground mb-6 text-lg">
+                  {t.services.academicHelp.description}
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+                  {t.services.academicHelp.items.map((item, index) => {
+                    const IconComponent = academicIcons[index]?.icon || FileText;
+                    return (
+                      <div
+                        key={index}
+                        className="flex items-center gap-3 p-4 bg-muted/30 border border-border/50 rounded-xl hover:bg-muted/50 transition-colors"
+                      >
+                        <IconComponent className="w-5 h-5 text-accent flex-shrink-0" />
+                        <span className="font-sans font-medium text-sm text-foreground">{item}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="flex items-start gap-3 p-4 bg-accent/10 border border-accent/20 rounded-xl">
+                  <AlertCircle className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+                  <p className="font-sans text-sm text-accent-foreground/80">
+                    {t.services.academicHelp.note}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
           </motion.div>
         </motion.div>
 
@@ -137,42 +147,48 @@ export function Services() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8"
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12"
         >
-          <motion.div
-            variants={itemVariants}
-            className="bg-neu-cyan border-3 border-neu-black shadow-brutal p-6 text-center"
-          >
-            <div className="font-display text-4xl md:text-5xl font-bold text-neu-black mb-2">
-              50+
-            </div>
-            <div className="font-sans font-semibold text-neu-black uppercase tracking-wide text-sm">
-              Projects Done
-            </div>
+          <motion.div variants={itemVariants}>
+            <Card className="bg-gradient-to-br from-card to-card/50 border-border/50 backdrop-blur-xl text-center p-8 hover:border-primary/30 transition-colors duration-300">
+              <div className="w-14 h-14 mx-auto mb-4 bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/30 rounded-2xl flex items-center justify-center">
+                <Zap className="w-7 h-7 text-primary" />
+              </div>
+              <div className="font-display text-4xl md:text-5xl font-bold text-foreground mb-2">
+                50+
+              </div>
+              <div className="font-sans font-medium text-muted-foreground uppercase tracking-wide text-sm">
+                Projects Done
+              </div>
+            </Card>
           </motion.div>
 
-          <motion.div
-            variants={itemVariants}
-            className="bg-neu-yellow border-3 border-neu-black shadow-brutal p-6 text-center"
-          >
-            <div className="font-display text-4xl md:text-5xl font-bold text-neu-black mb-2">
-              30+
-            </div>
-            <div className="font-sans font-semibold text-neu-black uppercase tracking-wide text-sm">
-              Happy Clients
-            </div>
+          <motion.div variants={itemVariants}>
+            <Card className="bg-gradient-to-br from-card to-card/50 border-border/50 backdrop-blur-xl text-center p-8 hover:border-accent/30 transition-colors duration-300">
+              <div className="w-14 h-14 mx-auto mb-4 bg-gradient-to-br from-accent/20 to-accent/5 border border-accent/30 rounded-2xl flex items-center justify-center">
+                <Users className="w-7 h-7 text-accent" />
+              </div>
+              <div className="font-display text-4xl md:text-5xl font-bold text-foreground mb-2">
+                30+
+              </div>
+              <div className="font-sans font-medium text-muted-foreground uppercase tracking-wide text-sm">
+                Happy Clients
+              </div>
+            </Card>
           </motion.div>
 
-          <motion.div
-            variants={itemVariants}
-            className="bg-neu-pink border-3 border-neu-black shadow-brutal p-6 text-center"
-          >
-            <div className="font-display text-4xl md:text-5xl font-bold text-neu-black mb-2">
-              24h
-            </div>
-            <div className="font-sans font-semibold text-neu-black uppercase tracking-wide text-sm">
-              Fast Response
-            </div>
+          <motion.div variants={itemVariants}>
+            <Card className="bg-gradient-to-br from-card to-card/50 border-border/50 backdrop-blur-xl text-center p-8 hover:border-primary/30 transition-colors duration-300">
+              <div className="w-14 h-14 mx-auto mb-4 bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/30 rounded-2xl flex items-center justify-center">
+                <Clock className="w-7 h-7 text-primary" />
+              </div>
+              <div className="font-display text-4xl md:text-5xl font-bold text-foreground mb-2">
+                24h
+              </div>
+              <div className="font-sans font-medium text-muted-foreground uppercase tracking-wide text-sm">
+                Fast Response
+              </div>
+            </Card>
           </motion.div>
         </motion.div>
       </div>

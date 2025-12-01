@@ -1,6 +1,7 @@
 import { useLanguage } from '@/contexts/LanguageContext';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, Palette, FileText } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Card } from '@/components/ui/card';
 
 const portfolioItems = [
   {
@@ -8,42 +9,54 @@ const portfolioItems = [
     titleId: 'Poster Event Musik',
     titleEn: 'Music Event Poster',
     category: 'graphicDesign',
-    color: 'bg-neu-yellow',
+    gradient: 'from-primary/20 to-accent/10',
+    borderColor: 'border-primary/30',
+    hoverBorder: 'hover:border-primary/50',
   },
   {
     id: '2',
     titleId: 'Desain Feed Instagram',
     titleEn: 'Instagram Feed Design',
     category: 'graphicDesign',
-    color: 'bg-neu-pink',
+    gradient: 'from-accent/20 to-primary/10',
+    borderColor: 'border-accent/30',
+    hoverBorder: 'hover:border-accent/50',
   },
   {
     id: '3',
     titleId: 'Makalah Ekonomi',
     titleEn: 'Economics Paper',
     category: 'academicHelp',
-    color: 'bg-neu-cyan',
+    gradient: 'from-primary/20 to-accent/10',
+    borderColor: 'border-primary/30',
+    hoverBorder: 'hover:border-primary/50',
   },
   {
     id: '4',
     titleId: 'UI/UX Mobile App',
     titleEn: 'Mobile App UI/UX',
     category: 'graphicDesign',
-    color: 'bg-neu-pink',
+    gradient: 'from-accent/20 to-primary/10',
+    borderColor: 'border-accent/30',
+    hoverBorder: 'hover:border-accent/50',
   },
   {
     id: '5',
     titleId: 'Presentasi Bisnis',
     titleEn: 'Business Presentation',
     category: 'academicHelp',
-    color: 'bg-neu-yellow',
+    gradient: 'from-primary/20 to-accent/10',
+    borderColor: 'border-primary/30',
+    hoverBorder: 'hover:border-primary/50',
   },
   {
     id: '6',
     titleId: 'Brosur Produk',
     titleEn: 'Product Brochure',
     category: 'graphicDesign',
-    color: 'bg-neu-cyan',
+    gradient: 'from-accent/20 to-primary/10',
+    borderColor: 'border-accent/30',
+    hoverBorder: 'hover:border-accent/50',
   },
 ];
 
@@ -66,8 +79,13 @@ export function Portfolio() {
   };
 
   return (
-    <section id="portfolio" className="py-20 md:py-28 bg-neu-black">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="portfolio" className="py-20 md:py-28 bg-card/30 relative">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -75,10 +93,10 @@ export function Portfolio() {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-neu-white mb-4">
-            {t.portfolio.sectionTitle}
+          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4">
+            <span className="gradient-text">{t.portfolio.sectionTitle}</span>
           </h2>
-          <p className="font-sans text-lg md:text-xl text-neu-white/70 max-w-2xl mx-auto">
+          <p className="font-sans text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
             {t.portfolio.sectionSubtitle}
           </p>
         </motion.div>
@@ -94,40 +112,44 @@ export function Portfolio() {
             <motion.div
               key={item.id}
               variants={itemVariants}
-              className="group relative"
+              className="group"
             >
-              <div
-                className={`${item.color} border-3 border-neu-white aspect-square p-6 transition-all duration-200 hover:translate-x-[-4px] hover:translate-y-[-4px]`}
-                style={{
-                  boxShadow: '6px 6px 0px 0px #FFFFFF',
-                }}
+              <Card
+                className={`aspect-square bg-gradient-to-br ${item.gradient} border ${item.borderColor} ${item.hoverBorder} backdrop-blur-xl overflow-hidden transition-all duration-300 hover:scale-[1.02]`}
               >
-                <div className="absolute inset-0 bg-neu-black/0 group-hover:bg-neu-black/80 transition-all duration-300 flex items-center justify-center">
-                  <div className="opacity-0 group-hover:opacity-100 transition-all duration-300 text-center p-4">
-                    <ExternalLink className="w-8 h-8 text-neu-white mx-auto mb-3" />
-                    <span className="font-sans font-bold text-neu-white uppercase tracking-wide text-sm">
-                      {t.portfolio.viewProject}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="h-full flex flex-col justify-between relative z-10 group-hover:opacity-0 transition-opacity duration-300">
-                  <div className="w-12 h-12 bg-neu-white border-3 border-neu-black flex items-center justify-center font-display font-bold text-xl">
-                    {item.id}
+                <div className="h-full p-6 flex flex-col justify-between relative">
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  
+                  <div className="flex items-start justify-between relative z-10">
+                    <div className={`w-12 h-12 bg-background/50 backdrop-blur-sm border ${item.borderColor} rounded-xl flex items-center justify-center font-display font-bold text-xl text-foreground`}>
+                      {item.id}
+                    </div>
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="w-10 h-10 bg-primary/20 border border-primary/30 rounded-xl flex items-center justify-center">
+                        <ExternalLink className="w-5 h-5 text-primary" />
+                      </div>
+                    </div>
                   </div>
                   
-                  <div>
-                    <h3 className="font-display text-xl md:text-2xl font-bold text-neu-black mb-2">
+                  <div className="relative z-10">
+                    <div className={`w-10 h-10 mb-4 bg-background/50 backdrop-blur-sm border ${item.borderColor} rounded-xl flex items-center justify-center`}>
+                      {item.category === 'graphicDesign' ? (
+                        <Palette className="w-5 h-5 text-primary" />
+                      ) : (
+                        <FileText className="w-5 h-5 text-accent" />
+                      )}
+                    </div>
+                    <h3 className="font-display text-xl md:text-2xl font-bold text-foreground mb-2">
                       {language === 'ID' ? item.titleId : item.titleEn}
                     </h3>
-                    <span className="inline-block px-3 py-1 bg-neu-white border-2 border-neu-black font-sans font-semibold text-xs uppercase tracking-wide">
+                    <span className={`inline-block px-3 py-1.5 bg-background/50 backdrop-blur-sm border ${item.borderColor} rounded-full font-sans font-medium text-xs uppercase tracking-wide text-muted-foreground`}>
                       {item.category === 'graphicDesign' 
                         ? t.services.graphicDesign.title 
                         : t.services.academicHelp.title}
                     </span>
                   </div>
                 </div>
-              </div>
+              </Card>
             </motion.div>
           ))}
         </motion.div>

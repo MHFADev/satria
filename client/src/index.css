@@ -81,48 +81,48 @@
   --opaque-button-border-intensity: 12;
   --elevate-1: rgba(255,255,255, .04);
   --elevate-2: rgba(255,255,255, .08);
-  --background: 222 47% 6%;
+  --background: 230 15% 8%;
   --foreground: 210 40% 98%;
-  --border: 217 33% 17%;
-  --card: 222 47% 8%;
+  --border: 230 15% 18%;
+  --card: 230 15% 10%;
   --card-foreground: 210 40% 98%;
-  --card-border: 217 33% 17%;
-  --sidebar: 222 47% 7%;
+  --card-border: 230 15% 18%;
+  --sidebar: 230 15% 7%;
   --sidebar-foreground: 210 40% 98%;
-  --sidebar-border: 217 33% 17%;
-  --sidebar-primary: 217 91% 60%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 217 33% 12%;
+  --sidebar-border: 230 15% 18%;
+  --sidebar-primary: 190 95% 50%;
+  --sidebar-primary-foreground: 230 15% 8%;
+  --sidebar-accent: 230 15% 15%;
   --sidebar-accent-foreground: 210 40% 98%;
-  --sidebar-ring: 217 91% 60%;
-  --popover: 222 47% 9%;
+  --sidebar-ring: 190 95% 50%;
+  --popover: 230 15% 10%;
   --popover-foreground: 210 40% 98%;
-  --popover-border: 217 33% 17%;
-  --primary: 217 91% 60%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 217 33% 17%;
-  --secondary-foreground: 210 40% 98%;
-  --muted: 217 33% 17%;
-  --muted-foreground: 215 20% 65%;
-  --accent: 217 33% 17%;
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 63% 50%;
+  --popover-border: 230 15% 18%;
+  --primary: 190 95% 50%;
+  --primary-foreground: 230 15% 8%;
+  --secondary: 230 15% 15%;
+  --secondary-foreground: 210 40% 90%;
+  --muted: 230 15% 15%;
+  --muted-foreground: 215 20% 60%;
+  --accent: 270 80% 60%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 70% 55%;
   --destructive-foreground: 0 0% 100%;
-  --input: 217 33% 17%;
-  --ring: 217 91% 60%;
-  --chart-1: 217 91% 60%;
+  --input: 230 15% 18%;
+  --ring: 190 95% 50%;
+  --chart-1: 190 95% 50%;
   --chart-2: 160 84% 45%;
-  --chart-3: 43 96% 56%;
-  --chart-4: 291 64% 52%;
-  --chart-5: 12 76% 61%;
-  --shadow-2xs: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-  --shadow-xs: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
-  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
-  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.4);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.5), 0 8px 10px -6px rgb(0 0 0 / 0.4);
-  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.6);
+  --chart-3: 45 100% 55%;
+  --chart-4: 270 80% 60%;
+  --chart-5: 350 80% 60%;
+  --shadow-2xs: 0 1px 2px 0 rgb(0 0 0 / 0.4);
+  --shadow-xs: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.4);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.4);
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.6), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.6), 0 8px 10px -6px rgb(0 0 0 / 0.5);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.7);
 
   --sidebar-primary-border: hsl(var(--sidebar-primary));
   --sidebar-primary-border: hsl(from hsl(var(--sidebar-primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
@@ -228,6 +228,32 @@
     @apply bg-background/80 backdrop-blur-md;
   }
 
+  .glass-card {
+    @apply bg-card/60 backdrop-blur-xl border border-border/50;
+  }
+
+  .glow-primary {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.3), 0 0 40px hsl(var(--primary) / 0.1);
+  }
+
+  .glow-accent {
+    box-shadow: 0 0 20px hsl(var(--accent) / 0.3), 0 0 40px hsl(var(--accent) / 0.1);
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent bg-[length:200%_auto];
+    animation: gradient-shift 3s ease-in-out infinite;
+  }
+
+  @keyframes gradient-shift {
+    0%, 100% {
+      background-position: 0% center;
+    }
+    50% {
+      background-position: 100% center;
+    }
+  }
+
   .scrollbar-thin::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -243,5 +269,31 @@
 
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
     @apply bg-muted-foreground/50;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
   }
 }
