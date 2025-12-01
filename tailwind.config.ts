@@ -6,12 +6,28 @@ export default {
   theme: {
     extend: {
       borderRadius: {
-        lg: ".5625rem", /* 9px */
-        md: ".375rem", /* 6px */
-        sm: ".1875rem", /* 3px */
+        lg: "0px",
+        md: "0px",
+        sm: "0px",
+        none: "0px",
+      },
+      borderWidth: {
+        "3": "3px",
+        "4": "4px",
+      },
+      boxShadow: {
+        "brutal": "6px 6px 0px 0px #000000",
+        "brutal-sm": "4px 4px 0px 0px #000000",
+        "brutal-lg": "8px 8px 0px 0px #000000",
+        "brutal-hover": "2px 2px 0px 0px #000000",
+        "brutal-active": "0px 0px 0px 0px #000000",
       },
       colors: {
-        // Flat / base colors (regular buttons)
+        "neu-yellow": "#FFDE00",
+        "neu-pink": "#FF52A3",
+        "neu-cyan": "#00F0FF",
+        "neu-black": "#000000",
+        "neu-white": "#FFFFFF",
         background: "hsl(var(--background) / <alpha-value>)",
         foreground: "hsl(var(--foreground) / <alpha-value>)",
         border: "hsl(var(--border) / <alpha-value>)",
@@ -83,8 +99,8 @@ export default {
         },
       },
       fontFamily: {
-        sans: ["var(--font-sans)"],
-        serif: ["var(--font-serif)"],
+        sans: ["'Space Grotesk'", "sans-serif"],
+        display: ["'Clash Display'", "sans-serif"],
         mono: ["var(--font-mono)"],
       },
       keyframes: {
@@ -96,10 +112,15 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "float": {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "float": "float 3s ease-in-out infinite",
       },
     },
   },
