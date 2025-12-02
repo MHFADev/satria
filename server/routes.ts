@@ -7,6 +7,39 @@ import session from "express-session";
 import MemoryStore from "memorystore";
 import bcrypt from "bcryptjs";
 import { broadcastProjectsUpdate, broadcastOrdersUpdate, broadcastSettingsUpdate } from "./websocket";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import { translateToEnglish } from "./gemini";
+
+const uploadDir = path.join(process.cwd(), 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+const storage_multer = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ 
+  storage: storage_multer,
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = /jpeg|jpg|png|gif|webp/;
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = allowedTypes.test(file.mimetype);
+    if (extname && mimetype) {
+      return cb(null, true);
+    }
+    cb(new Error('Only image files are allowed!'));
+  }
+});
 
 declare module "express-session" {
   interface SessionData {
@@ -338,6 +371,40 @@ export async function registerRoutes(
       res.json(stats);
     } catch (error) {
       res.status(500).json({ success: false, message: 'Failed to fetch stats' });
+    }
+  });
+
+  app.get('/api/stats', async (req, res) => {
+    try {
+      const projectList = await storage.getAllProjects();
+      res.json({ totalProjects: projectList.length });
+    } catch (error) {
+      res.status(500).json({ success: false, message: 'Failed to fetch stats' });
+    }
+  });
+
+  app.post('/api/admin/upload', requireAuth, upload.single('image'), (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ success: false, message: 'No file uploaded' });
+      }
+      const imageUrl = `/uploads/${req.file.filename}`;
+      res.json({ success: true, imageUrl });
+    } catch (error) {
+      res.status(500).json({ success: false, message: 'Failed to upload image' });
+    }
+  });
+
+  app.post('/api/admin/translate', requireAuth, async (req, res) => {
+    try {
+      const { text } = req.body;
+      if (!text) {
+        return res.status(400).json({ success: false, message: 'Text is required' });
+      }
+      const translated = await translateToEnglish(text);
+      res.json({ success: true, translated });
+    } catch (error) {
+      res.status(500).json({ success: false, message: 'Failed to translate text' });
     }
   });
 

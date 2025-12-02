@@ -2,6 +2,11 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Palette, FileText, Image, Layout, PenTool, FileSpreadsheet, BookOpen, AlertCircle, Zap, Users, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
+import { useQuery } from '@tanstack/react-query';
+
+type PublicStats = {
+  totalProjects: number;
+};
 
 const graphicIcons = [
   { icon: Image, label: 'Flyer' },
@@ -18,6 +23,10 @@ const academicIcons = [
 
 export function Services() {
   const { t } = useLanguage();
+  
+  const { data: stats } = useQuery<PublicStats>({
+    queryKey: ['/api/stats'],
+  });
 
   const containerVariants = {
     hidden: { opacity: 0 },

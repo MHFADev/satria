@@ -3,11 +3,14 @@ import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
 import { setupWebSocket } from "./websocket";
+import path from "path";
 
 const app = express();
 const httpServer = createServer(app);
 
 setupWebSocket(httpServer);
+
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 declare module "http" {
   interface IncomingMessage {
