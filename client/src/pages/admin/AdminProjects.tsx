@@ -18,7 +18,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Pencil, Trash2, Loader2, Image, ExternalLink } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2, Image, ExternalLink, FolderKanban } from "lucide-react";
 import AdminLayout from "./AdminLayout";
 
 const projectFormSchema = insertProjectSchema.extend({
@@ -454,5 +454,3 @@ export default function AdminProjects() {
     </AdminLayout>
   );
 }
-
-import { FolderKanban as FolderIcon } from "lucide-react";
