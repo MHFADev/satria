@@ -383,16 +383,25 @@ export async function registerRoutes(
     }
   });
 
-  app.post('/api/admin/upload', requireAuth, upload.single('image'), (req, res) => {
-    try {
-      if (!req.file) {
-        return res.status(400).json({ success: false, message: 'No file uploaded' });
+  app.post('/api/admin/upload', requireAuth, (req, res, next) => {
+    upload.single('image')(req, res, (err) => {
+      if (err) {
+        console.error('[Upload] Multer error:', err.message);
+        if (err.code === 'LIMIT_FILE_SIZE') {
+          return res.status(400).json({ success: false, message: 'Ukuran file maksimal 5MB' });
+        }
+        return res.status(400).json({ success: false, message: err.message || 'Upload gagal' });
       }
+      
+      if (!req.file) {
+        console.error('[Upload] No file received');
+        return res.status(400).json({ success: false, message: 'Tidak ada file yang diupload' });
+      }
+      
+      console.log('[Upload] Success:', req.file.filename);
       const imageUrl = `/uploads/${req.file.filename}`;
       res.json({ success: true, imageUrl });
-    } catch (error) {
-      res.status(500).json({ success: false, message: 'Failed to upload image' });
-    }
+    });
   });
 
   app.post('/api/admin/translate', requireAuth, async (req, res) => {

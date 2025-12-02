@@ -58,10 +58,17 @@ export default function AdminProjects() {
   });
 
   const handleFileUpload = async (file: File) => {
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: "Error", description: "Ukuran file maksimal 5MB", variant: "destructive" });
+      return;
+    }
+    
     setIsUploading(true);
     try {
       const formData = new FormData();
       formData.append('image', file);
+      
+      console.log('Uploading file:', file.name);
       
       const response = await fetch('/api/admin/upload', {
         method: 'POST',
@@ -69,16 +76,22 @@ export default function AdminProjects() {
         credentials: 'include',
       });
       
+      console.log('Upload response status:', response.status);
+      
       if (!response.ok) {
-        throw new Error('Upload gagal');
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Upload error:', errorData);
+        throw new Error(errorData.message || 'Upload gagal');
       }
       
       const data = await response.json();
+      console.log('Upload success:', data);
       form.setValue('imageUrl', data.imageUrl);
       setPreviewImage(data.imageUrl);
       toast({ title: "Berhasil", description: "Gambar berhasil diupload" });
-    } catch (error) {
-      toast({ title: "Error", description: "Gagal mengupload gambar", variant: "destructive" });
+    } catch (error: any) {
+      console.error('Upload exception:', error);
+      toast({ title: "Error", description: error.message || "Gagal mengupload gambar", variant: "destructive" });
     } finally {
       setIsUploading(false);
     }
@@ -362,11 +375,15 @@ export default function AdminProjects() {
                             <input
                               type="file"
                               ref={fileInputRef}
-                              accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                              accept="image/*,.jpg,.jpeg,.png,.gif,.webp"
                               className="hidden"
                               onChange={(e) => {
                                 const file = e.target.files?.[0];
-                                if (file) handleFileUpload(file);
+                                if (file) {
+                                  console.log('File selected:', file.name, file.type, file.size);
+                                  handleFileUpload(file);
+                                }
+                                e.target.value = '';
                               }}
                               data-testid="input-file-upload"
                             />
