@@ -32,6 +32,12 @@ A professional portfolio and freelance services platform for "Cipet" (Creative F
    - Orders management with status tracking
    - Settings page with password change
 
+5. **Real-time Updates (WebSocket)**
+   - WebSocket server on `/ws` path
+   - Auto-sync when data changes in database
+   - Broadcasts: projects_updated, orders_updated, settings_updated
+   - TanStack Query cache invalidation for instant UI updates
+
 ## Project Structure
 ```
 ├── client/
@@ -68,6 +74,7 @@ A professional portfolio and freelance services platform for "Cipet" (Creative F
 │   ├── routes.ts             # API routes
 │   ├── storage.ts            # Database operations
 │   ├── db.ts                 # Database connection
+│   ├── websocket.ts          # WebSocket server for real-time updates
 │   └── index.ts
 ├── shared/
 │   └── schema.ts             # Drizzle schemas and TypeScript types

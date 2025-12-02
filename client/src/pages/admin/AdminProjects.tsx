@@ -55,11 +55,7 @@ export default function AdminProjects() {
 
   const createMutation = useMutation({
     mutationFn: async (data: ProjectFormData) => {
-      return apiRequest('/api/admin/projects', {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return apiRequest('POST', '/api/admin/projects', data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/projects'] });
@@ -75,11 +71,7 @@ export default function AdminProjects() {
 
   const updateMutation = useMutation({
     mutationFn: async ({ id, data }: { id: number; data: Partial<ProjectFormData> }) => {
-      return apiRequest(`/api/admin/projects/${id}`, {
-        method: 'PATCH',
-        body: JSON.stringify(data),
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return apiRequest('PATCH', `/api/admin/projects/${id}`, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/projects'] });
@@ -95,7 +87,7 @@ export default function AdminProjects() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
-      return apiRequest(`/api/admin/projects/${id}`, { method: 'DELETE' });
+      return apiRequest('DELETE', `/api/admin/projects/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/projects'] });
@@ -264,8 +256,11 @@ export default function AdminProjects() {
                               type="number" 
                               placeholder="0" 
                               data-testid="input-order"
-                              {...field} 
+                              value={field.value ?? 0}
                               onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                              onBlur={field.onBlur}
+                              name={field.name}
+                              ref={field.ref}
                             />
                           </FormControl>
                           <FormMessage />
