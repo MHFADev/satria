@@ -4,7 +4,8 @@ import { z } from "zod";
 import { orderFormSchema, insertProjectSchema, loginSchema } from "@shared/schema";
 import { storage } from "./storage";
 import session from "express-session";
-import MemoryStore from "memorystore";
+import pgSession from "connect-pg-simple";
+import { db } from "./db";
 import bcrypt from "bcryptjs";
 import { broadcastProjectsUpdate, broadcastOrdersUpdate, broadcastSettingsUpdate } from "./websocket";
 import multer from "multer";
@@ -48,7 +49,7 @@ declare module "express-session" {
   }
 }
 
-const MemoryStoreSession = MemoryStore(session);
+const PgSession = pgSession(session);
 
 const serviceLabels: Record<string, string> = {
   graphicDesign: 'Graphic Design',
@@ -83,14 +84,19 @@ export async function registerRoutes(
 ): Promise<Server> {
 
   app.use(session({
-    store: new MemoryStoreSession({
-      checkPeriod: 86400000
+    store: new PgSession({
+      conObject: {
+        connectionString: process.env.DATABASE_URL,
+        ssl: process.env.DATABASE_URL?.includes('localhost') ? false : { rejectUnauthorized: false }
+      },
+      tableName: 'session',
+      createTableIfMissing: true,
     }),
     secret: process.env.SESSION_SECRET || 'cipet-admin-secret-key-2024',
-    resave: true,
+    resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: false,
+      secure: process.env.NODE_ENV === 'production',
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
       sameSite: 'lax'
@@ -384,6 +390,11 @@ export async function registerRoutes(
   });
 
   app.post('/api/admin/upload', requireAuth, (req, res, next) => {
+    // Upload disabled on Vercel - ephemeral filesystem
+    if (process.env.NODE_ENV === 'production') {
+      return res.status(501).json({ success: false, message: 'Upload not available in production' });
+    }
+    
     upload.single('image')(req, res, (err) => {
       if (err) {
         console.error('[Upload] Multer error:', err.message);
