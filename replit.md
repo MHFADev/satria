@@ -9,6 +9,8 @@ A professional portfolio and freelance services platform for "Cipet" (Creative F
 - **Database:** PostgreSQL with Drizzle ORM
 - **Form Handling:** React Hook Form + Zod validation
 - **Styling:** Modern dark theme with professional color palette
+- **Image Processing:** Sharp for image compression
+- **Deployment:** Configured for Vercel deployment
 
 ## Key Features
 1. **Dual Language System (ID/EN)**
@@ -37,6 +39,12 @@ A professional portfolio and freelance services platform for "Cipet" (Creative F
    - Auto-sync when data changes in database
    - Broadcasts: projects_updated, orders_updated, settings_updated
    - TanStack Query cache invalidation for instant UI updates
+
+6. **Image Compression for Admin Uploads**
+   - Automatic image compression using Sharp library
+   - Targets ~100KB file size with quality optimization
+   - Supports JPEG, PNG, GIF, WebP formats
+   - Reduces storage and improves page load performance
 
 ## Project Structure
 ```
@@ -142,36 +150,3 @@ npx drizzle-kit push  # Push schema changes to database
 - Database: PostgreSQL (Railway)
 - Session storage: In-memory (MemoryStore)
 - All environment variables should be configured as secrets
-
-## Vercel Deployment (Latest Update)
-
-### Changes Made for Production Deployment
-1. **Session Storage**: Switched from in-memory (MemoryStore) to database-backed sessions using connect-pg-simple
-   - Sessions now stored in PostgreSQL `session` table
-   - Fixes: "401 Unauthorized" errors after login on Vercel
-   - Table auto-created on first run
-
-2. **Cookie Security**: Production cookies now use HTTPS (`secure: true`)
-
-3. **File Uploads**: Disabled on production (Vercel ephemeral filesystem)
-   - Returns 501 error if attempted
-   - Solution: Use cloud storage or pre-upload images
-
-4. **Configuration Files**:
-   - Added `vercel.json` for Vercel build configuration
-   - Updated `.gitignore` to exclude env and uploads
-
-### Required Environment Variables for Vercel
-- `DATABASE_URL`: PostgreSQL connection string (required)
-- `SESSION_SECRET`: Random string for session encryption (recommended)
-- `DISCORD_WEBHOOK_URL`: For order notifications (optional)
-- `GOOGLE_GEMINI_API_KEY`: For translations (optional)
-
-### Next Steps
-1. Push code to GitHub
-2. Connect to Vercel
-3. Add DATABASE_URL environment variable
-4. Deploy - Vercel auto-detects and builds
-5. Test: Login, submit order form, check admin panel
-
-See `VERCEL_DEPLOYMENT_GUIDE.md` for complete deployment instructions.

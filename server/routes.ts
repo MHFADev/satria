@@ -4,14 +4,14 @@ import { z } from "zod";
 import { orderFormSchema, insertProjectSchema, loginSchema } from "@shared/schema";
 import { storage } from "./storage";
 import session from "express-session";
-import pgSession from "connect-pg-simple";
-import { db } from "./db";
+import MemoryStore from "memorystore";
 import bcrypt from "bcryptjs";
 import { broadcastProjectsUpdate, broadcastOrdersUpdate, broadcastSettingsUpdate } from "./websocket";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { translateToEnglish } from "./gemini";
+import sharp from "sharp";
 
 const uploadDir = path.join(process.cwd(), 'uploads');
 if (!fs.existsSync(uploadDir)) {
@@ -49,7 +49,7 @@ declare module "express-session" {
   }
 }
 
-const PgSession = pgSession(session);
+const MemoryStoreSession = MemoryStore(session);
 
 const serviceLabels: Record<string, string> = {
   graphicDesign: 'Graphic Design',
@@ -84,19 +84,14 @@ export async function registerRoutes(
 ): Promise<Server> {
 
   app.use(session({
-    store: new PgSession({
-      conObject: {
-        connectionString: process.env.DATABASE_URL,
-        ssl: process.env.DATABASE_URL?.includes('localhost') ? false : { rejectUnauthorized: false }
-      },
-      tableName: 'session',
-      createTableIfMissing: true,
+    store: new MemoryStoreSession({
+      checkPeriod: 86400000
     }),
     secret: process.env.SESSION_SECRET || 'cipet-admin-secret-key-2024',
-    resave: false,
+    resave: true,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === 'production',
+      secure: false,
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
       sameSite: 'lax'
@@ -390,12 +385,7 @@ export async function registerRoutes(
   });
 
   app.post('/api/admin/upload', requireAuth, (req, res, next) => {
-    // Upload disabled on Vercel - ephemeral filesystem
-    if (process.env.NODE_ENV === 'production') {
-      return res.status(501).json({ success: false, message: 'Upload not available in production' });
-    }
-    
-    upload.single('image')(req, res, (err) => {
+    upload.single('image')(req, res, async (err) => {
       if (err) {
         console.error('[Upload] Multer error:', err.message);
         if (err.code === 'LIMIT_FILE_SIZE') {
@@ -409,9 +399,50 @@ export async function registerRoutes(
         return res.status(400).json({ success: false, message: 'Tidak ada file yang diupload' });
       }
       
-      console.log('[Upload] Success:', req.file.filename);
-      const imageUrl = `/uploads/${req.file.filename}`;
-      res.json({ success: true, imageUrl });
+      try {
+        const inputPath = req.file.path;
+        const ext = path.extname(req.file.filename).toLowerCase();
+        const nameWithoutExt = path.basename(req.file.filename, ext);
+        const compressedFilename = `${nameWithoutExt}-compressed${ext}`;
+        const compressedPath = path.join(uploadDir, compressedFilename);
+        
+        // Compress image to target size (~100KB)
+        let quality = 80;
+        let compressed = false;
+        
+        while (quality >= 30 && !compressed) {
+          await sharp(inputPath)
+            .resize(1920, 1080, {
+              fit: 'inside',
+              withoutEnlargement: true
+            })
+            .jpeg({ quality, progressive: true })
+            .toFile(compressedPath);
+          
+          const stats = fs.statSync(compressedPath);
+          const fileSizeInKb = stats.size / 1024;
+          
+          console.log(`[Upload] Compressed to ${fileSizeInKb.toFixed(2)}KB at quality ${quality}`);
+          
+          if (fileSizeInKb <= 100 || quality <= 30) {
+            compressed = true;
+          } else {
+            quality -= 10;
+          }
+        }
+        
+        // Delete original file
+        fs.unlinkSync(inputPath);
+        
+        console.log('[Upload] Success:', compressedFilename);
+        const imageUrl = `/uploads/${compressedFilename}`;
+        res.json({ success: true, imageUrl });
+      } catch (error) {
+        console.error('[Upload] Compression error:', error);
+        // Fallback: return original file if compression fails
+        const imageUrl = `/uploads/${req.file.filename}`;
+        res.json({ success: true, imageUrl });
+      }
     });
   });
 
